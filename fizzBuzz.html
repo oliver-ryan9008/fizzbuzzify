@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <style>
+            #wrapper {
+                height: 50vh;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+            .fizzbuzzRow{
+                font-weight: bold;
+            }
+        </style>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.4.1/sketchy/bootstrap.css" />
+    </head>
+    
+
+
+
+    <body>
+        <div class="jumbotron">
+            <label for="inputText" style="font-size: 1rem; font-weight: bolder;">Max Value To Execute : </label>
+            <input type="number" id="inputText">
+            <button type="button" onclick="fizzBuzz()" class="btn btn-primary">Fizzbuzzify Me</button>
+            <br><br><br>
+            <div style="text-align: center;">
+                <div style="font-weight: 600"><span>Currently Calculating....</span></div>
+                <div id="calculating" style="display: inline-block; font-size: 1rem"></div>
+            </div>
+            <br><br>
+            <div id="fizzBuzzSection" style="text-align: center;">
+                <h3 class="display-3">FizzBuzz List</h3>
+                <div class="lead" style="text-align: center;" id="wrapper">
+                    <ul id="list"></ul>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        let time = 50;
+        let num = 0;
+
+        slowYourRoll = (item) => {
+            let offset = time;
+
+            setTimeout(function(){
+                displayItems(item);
+            }, offset);
+        }
+
+        showNumber = (number) => {
+            const numBox = document.getElementById('calculating');
+            setTimeout(function(){
+                numBox.innerHTML = number;
+            }, time + 100);
+        }
+
+        finished = () => {
+            const ul = document.getElementById("wrapper");
+            ul.scrollTop = ul.scrollHeight - ul.clientHeight;
+
+            return;
+        }
+
+        createListElement = () => {
+            const wrapper = document.createElement("div");
+            const ul = document.createElement("ul");
+            const section = document.getElementById("fizzBuzzSection");
+            wrapper.id = "wrapper";
+            wrapper.setAttribute("class", "lead");
+            wrapper.setAttribute("style", "text-align: center");
+            ul.id = "list";
+
+            section.appendChild(wrapper);
+            wrapper.appendChild(ul);
+        }
+
+        fizzBuzz = () => {
+            const wrapper = document.getElementById("wrapper");
+            wrapper.innerHTML = "";
+            createListElement();
+
+            time = 50;
+            num = 0;
+
+            const begin = document.createElement("h4");
+            begin.appendChild(document.createTextNode('------BEGIN------'));
+            displayItems(begin, 0);
+
+            const maxLimit = document.getElementById('inputText').value;
+            const limiter = parseInt(maxLimit);
+
+            for (var number = 0; number <= limiter; number++) {
+                const fizzbuzz = number === 0 ? number : number % 15 === 0 ? 'fizzbuzz' : number % 3 === 0 ? 'fizz' : number % 5 === 0 ? 'buzz' : number;
+                const item = createItem(fizzbuzz, number);
+                time = time + 100;
+                slowYourRoll(item, time);
+
+                if(number == limiter){
+                    time = time + 100;
+                    createEndStamp();
+                }
+            }
+
+            return finished();
+        }
+
+        createEndStamp = () => {
+            const element = document.createElement("h4");
+            const whiteSpace = document.createElement("br");
+            const white = document.createElement("h4");
+            const ulWrapper = document.getElementById("wrapper");
+
+            element.appendChild(document.createTextNode('------COMPLETE------'));
+            white.appendChild(whiteSpace);
+            slowYourRoll(element);
+            time = time + 50;
+            slowYourRoll(white);
+        }
+
+        createItem = (entry, number) => {
+            let id;
+
+            const item = document.createElement("li");
+            item.appendChild(document.createTextNode(entry));
+            id = 'item#' + number.toString();
+
+            item.setAttribute("id", id);
+            if(typeof entry === "string"){
+                item.setAttribute("class", "fizzbuzzRow");
+            }
+            showNumber(num);
+            num++;
+
+            return item;
+        }
+
+        displayItems = (item) => {
+            const ulWrapper = document.getElementById("wrapper");
+            ulWrapper.scrollTo(0, ulWrapper.scrollHeight);
+            
+            return ulWrapper.appendChild(item);
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</html>
